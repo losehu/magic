@@ -394,11 +394,7 @@ class ReorderMultiViewImagesM:
 
     ORI_ORDER = [
         "CAM_FRONT",
-        "CAM_FRONT_RIGHT",
-        "CAM_FRONT_LEFT",
-        "CAM_BACK",
-        "CAM_BACK_LEFT",
-        "CAM_BACK_RIGHT",
+
     ]
 
     SAFE_KEYS = [
@@ -510,11 +506,7 @@ class RandomFlip3DwithViews:
     `bevfusion/tools/data_converter/nuscenes_converter.py`, as follows:
         ORI_ORDER = [
             "CAM_FRONT",
-            "CAM_FRONT_RIGHT",
-            "CAM_FRONT_LEFT",
-            "CAM_BACK",
-            "CAM_BACK_LEFT",
-            "CAM_BACK_RIGHT",
+
         ]
     We also assume images views have same size (ori & resized).
     """

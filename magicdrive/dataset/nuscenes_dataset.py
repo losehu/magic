@@ -1,6 +1,6 @@
 import os
 from typing import Any, Dict
-
+import re
 import numpy as np
 from pyquaternion import Quaternion
 
@@ -150,10 +150,12 @@ class NuScenesDatasetM(NuScenesDataset):
             data["camera_intrinsics"] = []
             data["camera2lidar"] = []
 
-            for _, camera_info in info["cams"].items():
+            for cam_name, camera_info in info["cams"].items():
+                if cam_name!="CAM_FRONT":
+                    continue
                 # MY TODO:规范路径cfg
                 temp = os.path.join('/root/autodl-tmp/MagicDrive/data/',camera_info["data_path"])
-                                    
+                #  re.sub(r'([^/]+)_([^/]+)\.jpg$', r'\2.jpg', info["cams"]['CAM_FRONT']['data_path'])
                 data["image_paths"].append(temp)
 
                 # lidar to camera transform
