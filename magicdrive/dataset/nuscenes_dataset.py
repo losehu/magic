@@ -1,3 +1,4 @@
+import os
 from typing import Any, Dict
 
 import numpy as np
@@ -150,7 +151,10 @@ class NuScenesDatasetM(NuScenesDataset):
             data["camera2lidar"] = []
 
             for _, camera_info in info["cams"].items():
-                data["image_paths"].append(camera_info["data_path"])
+                # MY TODO:规范路径cfg
+                temp = os.path.join('/root/autodl-tmp/MagicDrive/data/',camera_info["data_path"])
+                                    
+                data["image_paths"].append(temp)
 
                 # lidar to camera transform
                 lidar2camera_r = np.linalg.inv(
