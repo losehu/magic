@@ -843,6 +843,8 @@ class BEVControlNetModel(ModelMixin, ConfigMixin):
             controlnet_cond, 'b ... -> (b repeat) ...', repeat=N_cam)
 
         # 2. pre-process
+        controlnet_cond=torch.nn.functional.interpolate(controlnet_cond, size=(136, 1200), mode='bilinear', align_corners=True)
+
         sample = self.conv_in(sample) #torch.Size([3, 320, 28, 50])
 
         controlnet_cond = self.controlnet_cond_embedding(controlnet_cond) #torch.Size([3, 320, 28, 50])

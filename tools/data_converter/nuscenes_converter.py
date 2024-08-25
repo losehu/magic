@@ -230,7 +230,7 @@ def _fill_trainval_infos(nusc, train_scenes, val_scenes, test=False, max_sweeps=
 
         # obtain 6 image's information per frame
         camera_types = [
-            "CAM_FRONT",
+            "CAM_PANO",
 
         ]
         for cam in camera_types:
@@ -378,7 +378,7 @@ def export_2d_annotation(root_path, info_path, version, mono3d=True):
     """
     # get bbox annotations for camera
     camera_types = [
-        "CAM_FRONT",
+        "CAM_PANO",
 
     ]
     nusc_infos = mmcv.load(info_path)["infos"]

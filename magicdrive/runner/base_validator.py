@@ -138,8 +138,7 @@ class BaseValidator:
 
             # make image for 6 views and save to dict
             ori_imgs = [
-                to_pil_image(img_m11_to_01(val_input["pixel_values"][0][i]))
-                for i in range(6)
+                to_pil_image(img_m11_to_01(val_input["pixel_values"][0][0]))
             ]
             ori_img = concat_6_views(ori_imgs)
             ori_img_wb = concat_6_views(

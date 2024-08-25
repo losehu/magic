@@ -3,11 +3,7 @@ from PIL import Image
 
 
 def concat_6_views(imgs: Tuple[Image.Image, ...], oneline=False):
-    if oneline:
-        image = img_concat_h(*imgs)
-    else:
-        image = img_concat_v(img_concat_h(*imgs[:3]), img_concat_h(*imgs[3:]))
-    return image
+    return imgs[0]
 
 
 def img_m11_to_01(img):

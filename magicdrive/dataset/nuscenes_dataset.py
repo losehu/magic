@@ -9,6 +9,9 @@ from mmdet.datasets import DATASETS
 from mmdet3d.core.bbox import LiDARInstance3DBoxes
 from mmdet3d.datasets.nuscenes_dataset import NuScenesDataset
 
+def Pano2Cam(original_path):  # MY TODO:规范路径cfg
+    timestamp = original_path.split('__')[-1].split('.')[0]
+    return f'/root/autodl-tmp/magic-main/data/nuscenes/samples/CAM_PANO/{timestamp}.jpg'
 
 @DATASETS.register_module()
 class NuScenesDatasetM(NuScenesDataset):
@@ -153,11 +156,7 @@ class NuScenesDatasetM(NuScenesDataset):
             for cam_name, camera_info in info["cams"].items():
                 if cam_name!="CAM_FRONT":
                     continue
-                # MY TODO:规范路径cfg
-                temp = os.path.join('/root/autodl-tmp/MagicDrive/data/',camera_info["data_path"])
-                #  re.sub(r'([^/]+)_([^/]+)\.jpg$', r'\2.jpg', info["cams"]['CAM_FRONT']['data_path'])
-                data["image_paths"].append(temp)
-
+                data["image_paths"].append(Pano2Cam(info['lidar_path']))
                 # lidar to camera transform
                 lidar2camera_r = np.linalg.inv(
                     camera_info["sensor2lidar_rotation"])

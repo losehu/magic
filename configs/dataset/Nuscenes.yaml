@@ -11,13 +11,13 @@ template: A driving scene image at {location}. {description}.
 # point_cloud_range: [-51.2, -51.2, -5.0, 51.2, 51.2, 3.0]
 # voxel_size: [0.1, 0.1, 0.2]
 # image_size: [256, 704]  # size of devfusion
-image_size: [224, 400]
+image_size: [160, 2400]
 map_bound:
   x: [-50.0, 50.0, 0.5]
   y: [-50.0, 50.0, 0.5]
 
 view_order:
-  - "CAM_FRONT"
+  - "CAM_PANO"
 
 
 neighboring_view_pair:
