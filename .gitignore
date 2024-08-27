@@ -1,4 +1,6 @@
 # my stuff
+nuscenes_full
+nuscenes_full/*
 magicdrive-log
 magicdrive-log/*
 *.png

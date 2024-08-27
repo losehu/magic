@@ -5,7 +5,7 @@ from omegaconf import OmegaConf
 from functools import partial
 from packaging import version
 from tqdm.auto import tqdm
-
+import shutil
 import torch
 import torch.nn.functional as F
 from einops import rearrange, repeat
@@ -363,6 +363,8 @@ class BaseRunner:
                         logging.info(f"Saved state to {save_path}")
 
                 logs = {"loss": loss.detach().item()}
+                os.makedirs(self.cfg.log_root, exist_ok=True) or open(os.path.join(self.cfg.log_root, 'loss.txt'), 'a').write(f"{global_step}   {loss.detach().item()}\n")
+
                 for lri, lr in enumerate(self.lr_scheduler.get_last_lr()):
                     logs[f"lr{lri}"] = lr
                 progress_bar.set_postfix(refresh=False, **logs)
@@ -381,6 +383,8 @@ class BaseRunner:
                         self._save_model(os.path.join(
                             self.cfg.log_root, sub_dir_name
                         ))
+                        shutil.rmtree(os.path.join(self.cfg.log_root, sub_dir_name, 'hydra'), ignore_errors=True) if os.path.exists(os.path.join(self.cfg.log_root, sub_dir_name, 'hydra')) else None; shutil.copytree(os.path.join(self.cfg.log_root, 'hydra'), os.path.join(self.cfg.log_root, sub_dir_name, 'hydra'))
+
                 self.accelerator.wait_for_everyone()
                 continue  # rather than break
             break  # if inner loop break, break again
