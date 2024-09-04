@@ -1,37 +1,45 @@
-import torch
 import subprocess
-from multiprocessing import Process
+import torch
+import shutil
+import os
 
-def run_command(gpu_id):
+def launch_accelerate():
+    
+    # Get the number of available GPUs
+    num_gpus = torch.cuda.device_count()
+
+    # Define the directory to be deleted
+    img_gen_dir = './tmp'
+
+    # Check if the directory exists, and if so, delete it
+    if os.path.exists(img_gen_dir):
+        shutil.rmtree(img_gen_dir)
+        print(f"Deleted directory: {img_gen_dir}")
+    else:
+        print(f"Directory does not exist: {img_gen_dir}")
+
+    # Prepare the command
     command = [
-        "python", "perception/data_prepare/val_set_gen.py",
-        "+exp=224x400", "task_id=224x400",
-        "resume_from_checkpoint=./pretrained/SDv1.5mv-rawbox_2023-09-07_18-39_224x400",
-        "fid.img_gen_dir=./tmp/224x400", "+fid=data_gen",
-        "runner.pipeline_param.use_zero_map_as_unconditional=true"
+        "accelerate", "launch",
+        "--mixed_precision", "fp16",
+        "--gpu_ids", "all",
+        "--num_processes", str(num_gpus),  # Use the number of GPUs
+        "perception/data_prepare/val_set_gen.py",
+        "resume_from_checkpoint=/root/autodl-tmp/magic-main/magicdrive-log/SDv1.5mv-rawbox_2024-08-29_17-02_224x400/weight-E125-S72975",
+        "task_id=224x400",
+        "fid.img_gen_dir=" + "tmp/224x400/samples",
+        "+fid=data_gen",
+        "+exp=224x400"
     ]
     
-    # 设置CUDA_VISIBLE_DEVICES环境变量来指定使用哪个GPU
-    env = {"CUDA_VISIBLE_DEVICES": str(gpu_id)}
-    
-    # 运行命令
-    subprocess.run(command, env=env)
+    # Execute the command as a subprocess
+    result = subprocess.run(command, check=True)
 
-def main():
-    # 获取可用GPU的数量
-    num_gpus = torch.cuda.device_count()
-    
-    processes = []
-    
-    # 为每个GPU启动一个进程
-    for gpu_id in range(num_gpus):
-        p = Process(target=run_command, args=(gpu_id,))
-        p.start()
-        processes.append(p)
-    
-    # 等待所有进程完成
-    for p in processes:
-        p.join()
+    # Optional: Check the result
+    if result.returncode == 0:
+        print("Command executed successfully.")
+    else:
+        print(f"Command failed with return code: {result.returncode}")
 
 if __name__ == "__main__":
-    main()
+    launch_accelerate()

@@ -287,7 +287,7 @@ def run_one_batch(cfg, pipe, val_input, weight_dtype, global_generator=None,
     if val_input["pixel_values"] is not None:
         ori_imgs = [
             [to_pil_image(img_m11_to_01(val_input["pixel_values"][bi][i]))
-             for i in range(6)] for bi in range(bs)
+             for i in range(1)] for bi in range(bs)
         ]
         if cfg.show_box:
             ori_imgs_with_box = [

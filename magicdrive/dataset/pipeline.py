@@ -521,7 +521,7 @@ class RandomFlip3DwithViews:
         # "lidar2image",
         # "camera2ego",
     ]
-    IMG_ORI_SIZE = [1600, 900]
+    IMG_ORI_SIZE = [2400, 160]
 
     VERTICLE_FLIP_ORDER = [0, 2, 1, 3, 5, 4]  # see the order above
     HORIZEONTAL_FLIP_ORDER = [3, 5, 4, 0, 2, 1]  # see the order above

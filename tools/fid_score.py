@@ -49,6 +49,11 @@ import torchvision.transforms as TF
 from PIL import Image
 from scipy import linalg
 from torch.nn.functional import adaptive_avg_pool2d
+def Pano2Cam(original_path):  # MY TODO:规范路径cfg
+    timestamp = original_path.split('__')[-1].split('.')[0]
+    return f'/root/autodl-tmp/magic-main/data/nuscenes/samples/CAM_PANO/{timestamp}.jpg'
+
+
 
 try:
     from tqdm import tqdm
@@ -305,20 +310,20 @@ def calculate_fid_given_tokens(
         if tokens is not None and not tokens[sample_token]:
             continue
         sample = nusc.get('sample', sample_token)
-        for sensor in sensors:
-            cam_filename = nusc.get(
-                "sample_data", sample['data'][sensor])['filename']
-            cam_patha = cam_filename.replace("samples", roots[0])
-            files[0].append(cam_patha)
-            assert os.path.exists(cam_patha), f"Invalid path {cam_patha}"
-
-            # cam_pathbs = glob.glob("*".join(os.path.splitext(
-            #     cam_filename.replace("samples", roots[1]))))
-            cam_pathbs = ["_gen_0".join(os.path.splitext(
-                cam_filename.replace("samples", roots[1])))]
-            for cam_pathb in cam_pathbs:
-                files[1].append(cam_pathb)
-                assert os.path.exists(cam_pathb), f"Invalid path in {cam_pathb}"
+        cam_filename = nusc.get(
+            "sample_data", sample['data']['LIDAR_TOP'])['filename']
+        cam_filename=Pano2Cam(cam_filename)
+        cam_patha =cam_filename
+        files[0].append(cam_patha)
+        assert os.path.exists(cam_patha), f"Invalid path {cam_patha}"
+        # cam_pathbs = glob.glob("*".join(os.path.splitext(
+        #     cam_filename.replace("samples", roots[1]))))
+        cam_pathbs = ["_gen_0".join(os.path.splitext(
+            cam_filename.replace("samples", roots[1])))]
+        for cam_pathb in cam_pathbs:
+            cam_pathb=cam_pathb.replace("/data/nuscenes", "")
+            files[1].append(cam_pathb)
+            assert os.path.exists(cam_pathb), f"Invalid path in {cam_pathb}"
 
     block_idx = InceptionV3.BLOCK_INDEX_BY_DIM[dims]
 
@@ -472,7 +477,7 @@ def hydra_main(cfg):
     tokens, _ = sample_token_from_scene(args.ratio, nusc)
 
     # get fid score
-    IN_SIZE = (900, 1600)
+    IN_SIZE = (160, 2400)
     resize_ratio = np.mean(cfg.dataset.augment2d.resize[0])
     _size = (int(IN_SIZE[0] * resize_ratio), int(IN_SIZE[1] * resize_ratio))
     transforms = TF.Compose([

@@ -5,7 +5,6 @@ from omegaconf import OmegaConf
 from functools import partial
 from packaging import version
 from tqdm.auto import tqdm
-import shutil
 import torch
 import torch.nn.functional as F
 from einops import rearrange, repeat
@@ -383,8 +382,6 @@ class BaseRunner:
                         self._save_model(os.path.join(
                             self.cfg.log_root, sub_dir_name
                         ))
-                        shutil.rmtree(os.path.join(self.cfg.log_root, sub_dir_name, 'hydra'), ignore_errors=True) if os.path.exists(os.path.join(self.cfg.log_root, sub_dir_name, 'hydra')) else None; shutil.copytree(os.path.join(self.cfg.log_root, 'hydra'), os.path.join(self.cfg.log_root, sub_dir_name, 'hydra'))
-
                 self.accelerator.wait_for_everyone()
                 continue  # rather than break
             break  # if inner loop break, break again

@@ -11,7 +11,7 @@ except ImportError:
 # Inception weights ported to Pytorch from
 # http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz
 # MY TODO: path cfg
-FID_WEIGHTS_URL = '/root/autodl-tmp/MagicDrive/pretrained/torch_cache/checkpoints/pt_inception-2015-12-05-6726825d.pth'  # noqa: E501
+FID_WEIGHTS_URL = '/root/autodl-tmp/magic-main/pretrained/torch_cache/checkpoints/pt_inception-2015-12-05-6726825d.pth'  # noqa: E501
 
 
 class InceptionV3(nn.Module):

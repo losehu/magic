@@ -556,7 +556,7 @@ def get_2d_boxes(nusc, sample_data_token: str, visibilities: List[str], mono3d=T
 
 
 def post_process_coords(
-    corner_coords: List, imsize: Tuple[int, int] = (1600, 900)
+    corner_coords: List, imsize: Tuple[int, int] = (2400, 160)
 ) -> Union[Tuple[float, float, float, float], None]:
     """Get the intersection of the convex hull of the reprojected bbox corners
     and the image canvas, return None if no intersection.
