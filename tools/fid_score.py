@@ -42,7 +42,7 @@ import hydra
 from hydra.utils import to_absolute_path
 from hydra.core.hydra_config import HydraConfig
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
-
+import re
 import numpy as np
 import torch
 import torchvision.transforms as TF
@@ -69,7 +69,18 @@ from perception.common.nuscenes_utils import sample_token_from_scene
 
 IMAGE_EXTENSIONS = {'bmp', 'jpg', 'jpeg', 'pgm', 'png', 'ppm',
                     'tif', 'tiff', 'webp'}
-
+output_txt_path='/root/autodl-tmp/magic-main/fid.txt'
+def save_fid_to_txt(file_path, fid_value,path):
+    match = str(re.search(r'(\d+)$', path).group(1))
+    # 检查文件是否存在
+    if not os.path.exists(file_path):
+        # 如果文件不存在，则创建并写入FID_value
+        with open(file_path, 'w') as f:
+            f.write(f'{match}    {fid_value}\n')
+    else:
+        # 如果文件存在，则追加FID_value到文件末尾
+        with open(file_path, 'a') as f:
+            f.write(f'{match}    {fid_value}\n')
 
 class ImagePathDataset(torch.utils.data.Dataset):
     def __init__(self, files, transforms=None):
@@ -430,8 +441,10 @@ def path_main():
     print('FID: ', fid_value)
 
 
+
 @hydra.main(version_base=None, config_path="../configs", config_name="test_fid")
 def hydra_main(cfg):
+    
     output_dir = to_absolute_path(cfg.resume_from_checkpoint)
     original_overrides = OmegaConf.load(
         os.path.join(output_dir, "hydra/overrides.yaml"))
@@ -489,6 +502,7 @@ def hydra_main(cfg):
         [args.roota, args.rootb], tokens, cfg.dataset.view_order,
         args.batch_size, device, args.dims, nusc, num_workers, transforms)
     logging.info(f"FID: {fid_value}")
+    save_fid_to_txt(output_txt_path, fid_value,cfg.resume_from_checkpoint)
 
 
 def main():
